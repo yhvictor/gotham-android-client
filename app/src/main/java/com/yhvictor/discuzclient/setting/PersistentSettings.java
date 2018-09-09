@@ -13,8 +13,6 @@ public class PersistentSettings {
   @Inject
   PersistentSettings(Application application) {
     sharedPreferences = application.getSharedPreferences("settings", MODE_PRIVATE);
-    setUsername("yh_victor");
-    setPassword("EGquahuelpawyi0");
   }
 
   public String getUsername() {

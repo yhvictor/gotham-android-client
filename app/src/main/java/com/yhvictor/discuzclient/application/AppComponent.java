@@ -2,11 +2,11 @@ package com.yhvictor.discuzclient.application;
 
 import android.app.Application;
 
+import com.yhvictor.discuzclient.constants.ConstantsModule;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApiModule;
 import com.yhvictor.discuzclient.setting.SettingsFragment;
 import com.yhvictor.discuzclient.threadlist.ThreadListFragment;
 import com.yhvictor.discuzclient.util.concurrency.ConcurrencyModule;
-import com.yhvictor.discuzclient.util.constants.ConstantsModule;
 import com.yhvictor.discuzclient.util.glide.DiscuzGlideModule;
 import com.yhvictor.discuzclient.util.net.OkHttpClientModule;
 import com.yhvictor.discuzclient.webview.WebViewFragment;

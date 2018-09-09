@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,15 +13,33 @@
         android:text="list threads"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hash_image"
+        app:layout_constraintTop_toBottomOf="@+id/list_thread_button" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hash_image"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
     <ImageView
         android:id="@+id/hash_image"
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:baseline="20dp"
         app:layout_constraintBaseline_toBaselineOf="@id/hash_image_code"
-        app:layout_constraintEnd_toStartOf="@id/hash_image_code"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@drawable/ic_loading" />
 
     <EditText
         android:id="@+id/hash_image_code"
@@ -28,9 +47,8 @@
         android:layout_height="wrap_content"
         android:hint="hash image code"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toEndOf="@+id/hash_image"
-        app:layout_constraintTop_toBottomOf="@+id/list_thread_button" />
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/refresh_login_button"

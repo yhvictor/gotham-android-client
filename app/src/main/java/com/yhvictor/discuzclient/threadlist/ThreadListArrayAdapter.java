@@ -11,17 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.FluentFuture;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
-import com.yhvictor.discuzclient.discuzapi.data.DiscuzThread;
-import com.yhvictor.discuzclient.discuzapi.data.RecentThreadList;
 import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
+import com.yhvictor.discuzclient.util.json.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   private final DiscuzApi discuzApi;
   private final LayoutInflater inflater;
 
-  private final List<DiscuzThread> discuzThreads = Collections.synchronizedList(new ArrayList<>());
+  private final List<ThreadData> discuzThreads = Collections.synchronizedList(new ArrayList<>());
 
   @Inject
   public ThreadListArrayAdapter(
@@ -52,7 +52,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   }
 
   @Override
-  public DiscuzThread getItem(int position) {
+  public ThreadData getItem(int position) {
     return discuzThreads.get(position);
   }
 
@@ -68,7 +68,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   }
 
   private @NonNull View createViewFromResource(
-      DiscuzThread thread, @Nullable View convertView, @NonNull ViewGroup parent) {
+      ThreadData thread, @Nullable View convertView, @NonNull ViewGroup parent) {
     final View view;
 
     if (convertView == null) {
@@ -84,38 +84,42 @@ public class ThreadListArrayAdapter extends BaseAdapter {
 
     Request request =
         new Request.Builder()
-            .url("https://" + hostName + "/uc_server/avatar.php?size=small&uid=" + thread.authorId)
+            .url(
+                "https://" + hostName + "/uc_server/avatar.php?size=small&uid=" + thread.authorId())
             .build();
 
-    threadName.setText(thread.subject);
-    author.setText(thread.author);
-    threadCreationTime.setText(Html.fromHtml(thread.dateline));
+    threadName.setText(thread.subject());
+    author.setText(thread.author());
+    threadCreationTime.setText(Html.fromHtml(thread.dateline()));
     GlideApp.with(view).load(request).into(imageView);
 
     return view;
   }
 
   public void refreshList(Runnable runnable) {
-    Futures.addCallback(
-        discuzApi.listRecentThread(2, 0, 100),
-        new FutureCallback<RecentThreadList>() {
-          @Override
-          public void onSuccess(@NonNull RecentThreadList result) {
-            CommonExecutors.uiExecutor()
-                .submit(
-                    () -> {
-                      discuzThreads.clear();
-                      discuzThreads.addAll(result.getThreads());
-                      notifyDataSetChanged();
-                      runnable.run();
-                    });
-          }
+    FluentFuture.from(discuzApi.listRecentThread(2, 0, 100))
+        .transformAsync(JsonUtil::transform, MoreExecutors.directExecutor())
+        .transform(json -> json.optArray("Variables", "data"), MoreExecutors.directExecutor())
+        .transform(
+            jsonList -> Lists.transform(jsonList, ThreadData::new), MoreExecutors.directExecutor())
+        .addCallback(
+            new FutureCallback<List<ThreadData>>() {
+              @Override
+              public void onSuccess(List<ThreadData> result) {
+                Logger.d("thread count: " + result.size());
 
-          @Override
-          public void onFailure(@NonNull Throwable t) {
-            Logger.d("Error!", t);
-          }
-        },
-        MoreExecutors.directExecutor());
+                discuzThreads.clear();
+                discuzThreads.addAll(result);
+                notifyDataSetChanged();
+                runnable.run();
+              }
+
+              @Override
+              public void onFailure(Throwable t) {
+                Logger.d("Error!", t);
+                runnable.run();
+              }
+            },
+            CommonExecutors.uiExecutor());
   }
 }

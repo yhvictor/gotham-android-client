@@ -2,6 +2,7 @@ package com.yhvictor.discuzclient.util.net;
 
 import android.support.annotation.NonNull;
 import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 
 import com.yhvictor.discuzclient.debug.Logger;
 
@@ -16,7 +17,7 @@ import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
 /** Cookie jar to sync cookie between web view & ok http client. */
-class WebViewCookieHandler implements CookieJar {
+public class WebViewCookieHandler implements CookieJar {
   private final CookieManager webViewCookieManager;
 
   @Inject
@@ -56,5 +57,15 @@ class WebViewCookieHandler implements CookieJar {
     }
 
     return Collections.emptyList();
+  }
+
+  public void removeAllCookies() {
+    webViewCookieManager.removeAllCookies(
+        new ValueCallback<Boolean>() {
+          @Override
+          public void onReceiveValue(Boolean value) {
+            // Logger.d("All cookie removed!");
+          }
+        });
   }
 }

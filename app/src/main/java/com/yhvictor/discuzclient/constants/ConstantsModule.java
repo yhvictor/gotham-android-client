@@ -1,4 +1,4 @@
-package com.yhvictor.discuzclient.util.constants;
+package com.yhvictor.discuzclient.constants;
 
 import com.yhvictor.discuzclient.annotation.HostName;
 

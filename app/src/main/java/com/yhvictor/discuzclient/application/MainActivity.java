@@ -7,15 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.google.common.util.concurrent.FluentFuture;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
-import com.yhvictor.discuzclient.discuzapi.data.DiscuzThread;
-import com.yhvictor.discuzclient.discuzapi.data.RecentThreadList;
+import com.yhvictor.discuzclient.util.json.Json;
+import com.yhvictor.discuzclient.util.json.JsonUtil;
 
 import java.util.List;
 
@@ -41,39 +40,23 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void onButton2Click(View view) {
-    ListenableFuture<List<DiscuzThread>> threads =
-        Futures.transform(
-            discuzApi.listRecentThread(2, 0, 100),
-            RecentThreadList::getThreads,
+    FluentFuture.from(discuzApi.listRecentThread(2, 0, 100))
+        .transformAsync(JsonUtil::transform, MoreExecutors.directExecutor())
+        .transform(json -> json.optArray("Variables", "data"), MoreExecutors.directExecutor())
+        .addCallback(
+            new FutureCallback<List<Json>>() {
+              @Override
+              public void onSuccess(List<Json> result) {
+                for (Json thread : result) {
+                  Logger.d(thread.optString("author") + ": " + thread.optString("subject"));
+                }
+              }
+
+              @Override
+              public void onFailure(Throwable t) {
+                Log.i("yh_victor", "ERROR", t);
+              }
+            },
             MoreExecutors.directExecutor());
-
-    Futures.addCallback(
-        threads,
-        new FutureCallback<List<DiscuzThread>>() {
-          @Override
-          public void onSuccess(List<DiscuzThread> result) {
-            for (DiscuzThread thread : result) {
-              Logger.d(thread.author + ": " + thread.subject);
-            }
-          }
-
-          @Override
-          public void onFailure(Throwable t) {
-            Log.i("yh_victor", "ERROR", t);
-          }
-        },
-        MoreExecutors.directExecutor());
-  }
-
-  private void forumDisplay() {
-    Futures.transform(
-        discuzApi.forumDisplay(2, 1),
-        forumDisplay -> {
-          for (DiscuzThread thread : forumDisplay.getThreads()) {
-            Log.i("yhvictor", thread.author + ": " + thread.subject);
-          }
-          return null;
-        },
-        MoreExecutors.directExecutor());
   }
 }

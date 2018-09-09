@@ -68,7 +68,7 @@ public class ThreadListFragment extends Fragment
             .authority(hostName)
             .path("forum.php")
             .appendQueryParameter("mod", "viewthread")
-            .appendQueryParameter("tid", adapter.getItem(position).tid)
+            .appendQueryParameter("tid", adapter.getItem(position).tid())
             .build();
 
     ((ThreadListActivity) getActivity()).navigateToWebView(uri);

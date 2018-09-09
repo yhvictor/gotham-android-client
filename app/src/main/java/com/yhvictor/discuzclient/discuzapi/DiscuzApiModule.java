@@ -9,7 +9,6 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.guava.GuavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DiscuzApiModule {
@@ -21,7 +20,7 @@ public class DiscuzApiModule {
         new Retrofit.Builder()
             .baseUrl("http://" + hostName + "/api/mobile/")
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            // .addConverterFactory(ScalarsConverterFactory.create())
             .addCallAdapterFactory(GuavaCallAdapterFactory.create())
             .build();
 

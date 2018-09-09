@@ -7,14 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.common.util.concurrent.FluentFuture;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
@@ -22,9 +20,11 @@ import com.yhvictor.discuzclient.application.DiscuzClientApplication;
 import com.yhvictor.discuzclient.application.ThreadListActivity;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
-import com.yhvictor.discuzclient.discuzapi.data.LoginInfo;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
+import com.yhvictor.discuzclient.util.json.Json;
+import com.yhvictor.discuzclient.util.json.JsonUtil;
 import com.yhvictor.discuzclient.util.net.HttpGetter;
+import com.yhvictor.discuzclient.util.net.WebViewCookieHandler;
 
 import javax.inject.Inject;
 
@@ -34,10 +34,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   @HostName @Inject String hostName;
   @Inject HttpGetter httpGetter;
   @Inject DiscuzApi discuzApi;
+  @Inject WebViewCookieHandler webViewCookieHandler;
   @Inject PersistentSettings persistentSettings;
 
   ImageView imageView;
-  EditText editText;
+  EditText usernameEdit;
+  EditText passwordEdit;
+  EditText secCodeEdit;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     view.findViewById(R.id.clear_cookie).setOnClickListener(this);
 
     imageView = view.findViewById(R.id.hash_image);
-    editText = view.findViewById(R.id.hash_image_code);
+    usernameEdit = view.findViewById(R.id.username);
+    passwordEdit = view.findViewById(R.id.password);
+    secCodeEdit = view.findViewById(R.id.hash_image_code);
 
+    // TODO: use data binding.
+    usernameEdit.setText(persistentSettings.getUsername());
+    passwordEdit.setText(persistentSettings.getPassword());
     refreshImage();
 
     return view;
@@ -67,7 +75,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   @Override
   public void onDestroyView() {
     imageView = null;
-    editText = null;
+    usernameEdit = null;
+    passwordEdit = null;
+    secCodeEdit = null;
     super.onDestroyView();
   }
 
@@ -75,7 +85,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.clear_cookie:
-        CookieManager.getInstance().removeAllCookies(value -> Logger.d("All cookies removed"));
+        webViewCookieHandler.removeAllCookies();
         break;
       case R.id.hash_image:
         refreshImage();
@@ -107,27 +117,27 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   }
 
   private void onRefreshLoginClick() {
-    ListenableFuture<LoginInfo> loginInfoListenableFuture =
-        discuzApi.login(
-            persistentSettings.getUsername(),
-            persistentSettings.getPassword(),
-            editText.getText().toString());
+    persistentSettings.setUsername(usernameEdit.getText().toString());
+    persistentSettings.setPassword(passwordEdit.getText().toString());
 
-    Futures.addCallback(
-        loginInfoListenableFuture,
-        new FutureCallback<LoginInfo>() {
-          @Override
-          public void onSuccess(@NonNull LoginInfo result) {
-            Logger.d(result.version);
-            Logger.d(result.message);
-            Logger.d(result.variables);
-          }
+    FluentFuture.from(
+            discuzApi.login(
+                persistentSettings.getUsername(),
+                persistentSettings.getPassword(),
+                secCodeEdit.getText().toString()))
+        .transformAsync(JsonUtil::transform, MoreExecutors.directExecutor())
+        .addCallback(
+            new FutureCallback<Json>() {
+              @Override
+              public void onSuccess(Json result) {
+                Logger.d(result);
+              }
 
-          @Override
-          public void onFailure(@NonNull Throwable t) {
-            Logger.d("Error !", new Throwable(t));
-          }
-        },
-        MoreExecutors.directExecutor());
+              @Override
+              public void onFailure(@NonNull Throwable t) {
+                Logger.d("Error !", new Throwable(t));
+              }
+            },
+            MoreExecutors.directExecutor());
   }
 }

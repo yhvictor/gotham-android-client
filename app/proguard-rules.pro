@@ -12,9 +12,7 @@
 #   public *;
 #}
 
-# Overall settings
--keepattributes Signature, InnerClasses
-
+## Overall settings
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
@@ -25,16 +23,26 @@
 
 -repackageclasses com.yhvictor.discuzclient.internal
 
-# Proguard annotations
+## Proguard annotations
 -keep,allowobfuscation class proguard.annotation.*
 -keepnames @proguard.annotation.KeepName class *
 -keepclassmembernames class * {
     @proguard.annotation.KeepName *;
 }
 
-# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+## Logging
+-assumenosideeffects class com.yhvictor.discuzclient.debug.Logger
+
+
+## OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
 
-# Guava
+## Guava
 -dontwarn java.lang.ClassValue
 -dontwarn sun.misc.Unsafe
+
+## retrofit
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
