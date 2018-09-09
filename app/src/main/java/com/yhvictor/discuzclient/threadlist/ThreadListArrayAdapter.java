@@ -62,14 +62,12 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   }
 
   @Override
-  public @NonNull
-  View getView(
+  public @NonNull View getView(
       int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     return createViewFromResource(getItem(position), convertView, parent);
   }
 
-  private @NonNull
-  View createViewFromResource(
+  private @NonNull View createViewFromResource(
       DiscuzThread thread, @Nullable View convertView, @NonNull ViewGroup parent) {
     final View view;
 

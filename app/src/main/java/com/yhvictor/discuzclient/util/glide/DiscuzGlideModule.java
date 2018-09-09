@@ -17,8 +17,7 @@ import okhttp3.Request;
 
 @GlideModule
 public final class DiscuzGlideModule extends AppGlideModule {
-  @Inject
-  OkHttpStreamFetcher.OkHttpModelLoader factory;
+  @Inject OkHttpStreamFetcher.OkHttpModelLoader factory;
 
   @Override
   public void registerComponents(

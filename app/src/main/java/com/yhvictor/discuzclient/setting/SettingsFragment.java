@@ -1,8 +1,5 @@
 package com.yhvictor.discuzclient.setting;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,27 +23,18 @@ import com.yhvictor.discuzclient.application.ThreadListActivity;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
 import com.yhvictor.discuzclient.discuzapi.data.LoginInfo;
-import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
 import com.yhvictor.discuzclient.util.net.HttpGetter;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
 import okhttp3.Request;
-import okhttp3.ResponseBody;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
-  @HostName
-  @Inject
-  String hostName;
-  @Inject
-  HttpGetter httpGetter;
-  @Inject
-  DiscuzApi discuzApi;
-  @Inject
-  PersistentSettings persistentSettings;
+  @HostName @Inject String hostName;
+  @Inject HttpGetter httpGetter;
+  @Inject DiscuzApi discuzApi;
+  @Inject PersistentSettings persistentSettings;
 
   ImageView imageView;
   EditText editText;
@@ -118,38 +106,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         .into(imageView);
   }
 
-  private void refreshImageBackUp() {
-    BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inTargetDensity = 10;
-    ListenableFuture<Bitmap> bitmapListenableFuture =
-        httpGetter.getBitmap(
-            options,
-            "http://" + hostName + "/misc.php?mod=seccode&update=12345&idhash=S199&mobile=2",
-            new HttpGetter.HeaderPair(
-                "Referer", "http://" + hostName + "/member.php?mod=logging&action=login&mobile=2"));
-
-    Futures.addCallback(
-        bitmapListenableFuture,
-        new FutureCallback<Bitmap>() {
-          @Override
-          public void onSuccess(@NonNull Bitmap bitmap) {
-            CommonExecutors.uiExecutor()
-                .submit(
-                    () -> {
-                      imageView.setMinimumHeight(options.outHeight * 5);
-                      imageView.setMinimumWidth(options.outWidth * 5);
-                      imageView.setImageBitmap(bitmap);
-                    });
-          }
-
-          @Override
-          public void onFailure(@NonNull Throwable t) {
-            Logger.d("error!", t);
-          }
-        },
-        MoreExecutors.directExecutor());
-  }
-
   private void onRefreshLoginClick() {
     ListenableFuture<LoginInfo> loginInfoListenableFuture =
         discuzApi.login(
@@ -170,58 +126,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
           @Override
           public void onFailure(@NonNull Throwable t) {
             Logger.d("Error !", new Throwable(t));
-          }
-        },
-        MoreExecutors.directExecutor());
-  }
-
-  private void refreshFallback() {
-    Uri uri =
-        new Uri.Builder()
-            .scheme("http")
-            .authority(hostName)
-            .path("member.php")
-            // .appendQueryParameter("loginhash", "LpPYm")
-            // .appendQueryParameter("handlekey", "loginform")
-            // .appendQueryParameter("fastloginfield", "username")
-            // .appendQueryParameter("referer", "http://bbs.bbuhot.com/forum.php?mobile=yes")
-            .appendQueryParameter("inajax", "1")
-            .appendQueryParameter("mod", "logging")
-            .appendQueryParameter("action", "login")
-            .appendQueryParameter("loginsubmit", "yes")
-            .appendQueryParameter("mobile", "2")
-            .appendQueryParameter("cookietime", "2592000")
-            .appendQueryParameter("username", persistentSettings.getUsername())
-            .appendQueryParameter("password", persistentSettings.getPassword())
-            .appendQueryParameter("questionid", "0")
-            .appendQueryParameter("answer", "")
-            .appendQueryParameter("seccodeverify", editText.getText().toString())
-            .build();
-
-    Request request =
-        new Request.Builder()
-            .url(uri.toString())
-            // .header("Origin", "http://bbs.bbuhot.com")
-            // .header("Referer",
-            // "http://bbs.bbuhot.com/member.php?mod=logging&action=login&mobile=2")
-            // .header("X-Request-With", "XMLHttpRequest")
-            .build();
-
-    Futures.addCallback(
-        httpGetter.getResponseBody(request),
-        new FutureCallback<ResponseBody>() {
-          @Override
-          public void onSuccess(@NonNull ResponseBody result) {
-            try {
-              Logger.d(new String(result.bytes()));
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-
-          @Override
-          public void onFailure(@NonNull Throwable t) {
-            Logger.d("Error!", t);
           }
         },
         MoreExecutors.directExecutor());

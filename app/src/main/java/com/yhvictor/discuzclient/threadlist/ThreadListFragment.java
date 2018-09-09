@@ -22,13 +22,9 @@ import javax.inject.Inject;
 
 public class ThreadListFragment extends Fragment
     implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
-  @Inject
-  DiscuzApi discuzApi;
-  @Inject
-  ThreadListArrayAdapter adapter;
-  @HostName
-  @Inject
-  String hostName;
+  @Inject DiscuzApi discuzApi;
+  @Inject ThreadListArrayAdapter adapter;
+  @HostName @Inject String hostName;
 
   SwipeRefreshLayout swipeRefreshLayout;
   ListView listView;

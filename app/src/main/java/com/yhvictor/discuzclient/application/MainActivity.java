@@ -22,8 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
-  @Inject
-  DiscuzApi discuzApi;
+  @Inject DiscuzApi discuzApi;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

@@ -15,9 +15,7 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
-/**
- * Cookie jar to sync cookie between web view & ok http client.
- */
+/** Cookie jar to sync cookie between web view & ok http client. */
 class WebViewCookieHandler implements CookieJar {
   private final CookieManager webViewCookieManager;
 

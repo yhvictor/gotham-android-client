@@ -52,8 +52,7 @@ public class CommonExecutors {
             }
           });
 
-  private CommonExecutors() {
-  }
+  private CommonExecutors() {}
 
   public static ListeningExecutorService poolExecutor() {
     return POOL_EXECUTOR;

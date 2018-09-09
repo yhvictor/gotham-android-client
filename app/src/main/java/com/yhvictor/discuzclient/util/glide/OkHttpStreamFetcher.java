@@ -63,8 +63,7 @@ class OkHttpStreamFetcher implements DataFetcher<InputStream> {
   }
 
   @Override
-  public void cancel() {
-  }
+  public void cancel() {}
 
   @NonNull
   @Override
@@ -109,8 +108,7 @@ class OkHttpStreamFetcher implements DataFetcher<InputStream> {
         }
 
         @Override
-        public void teardown() {
-        }
+        public void teardown() {}
       };
     }
   }

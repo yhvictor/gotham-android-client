@@ -19,14 +19,14 @@ import dagger.android.AndroidInjectionModule;
 @Singleton
 @Component(
     modules = {
-        AndroidInjectionModule.class,
-        ConcurrencyModule.class,
-        ConstantsModule.class,
-        DiscuzApiModule.class,
-        OkHttpClientModule.class,
+      AndroidInjectionModule.class,
+      ConcurrencyModule.class,
+      ConstantsModule.class,
+      DiscuzApiModule.class,
+      OkHttpClientModule.class,
     },
     dependencies = {
-        Application.class,
+      Application.class,
     })
 public interface AppComponent {
 

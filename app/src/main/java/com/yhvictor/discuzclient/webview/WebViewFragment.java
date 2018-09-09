@@ -1,6 +1,5 @@
 package com.yhvictor.discuzclient.webview;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +15,6 @@ import android.widget.ProgressBar;
 
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
-import com.yhvictor.discuzclient.debug.Logger;
 
 public class WebViewFragment extends Fragment {
   private WebView webView;
@@ -94,11 +92,13 @@ public class WebViewFragment extends Fragment {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+      /*
       Logger.d("1: " + url);
       if ("forumdisplay".equals(Uri.parse(url).getQueryParameter("mod"))) {
         getActivity().getSupportFragmentManager().popBackStack();
         return true;
       }
+      */
       return false;
     }
   }

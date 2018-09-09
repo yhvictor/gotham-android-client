@@ -5,20 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import proguard.annotation.KeepName;
 
 public class DiscuzThread {
-  @KeepName
-  public String tid;
+  @KeepName public String tid;
 
-  @KeepName
-  public String author;
+  @KeepName public String author;
 
   @SerializedName("authorid")
   public String authorId;
 
-  @KeepName
-  public String subject;
+  @KeepName public String subject;
 
-  @KeepName
-  public String dateline;
+  @KeepName public String dateline;
 
   @SerializedName("lastpost")
   public String lastPost;
@@ -26,11 +22,9 @@ public class DiscuzThread {
   @SerializedName("lastposter")
   public String lastPoster;
 
-  @KeepName
-  public String views;
+  @KeepName public String views;
 
-  @KeepName
-  public String replies;
+  @KeepName public String replies;
 
   @SerializedName("dbdateline")
   public int dbDateLine;
