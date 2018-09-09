@@ -40,7 +40,7 @@ public interface AppComponent {
 
   void inject(WebViewFragment webViewFragment);
 
-  void inject(ThreadListActivity threadListActivity);
+  void inject(FragmentActivity fragmentActivity);
 
   void inject(MainActivity mainActivity);
 

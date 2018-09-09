@@ -17,9 +17,9 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
-import com.yhvictor.discuzclient.application.ThreadListActivity;
-import com.yhvictor.discuzclient.debug.Logger;
+import com.yhvictor.discuzclient.application.FragmentActivity;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
+import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
 import com.yhvictor.discuzclient.util.json.Json;
 import com.yhvictor.discuzclient.util.json.JsonUtil;
@@ -94,7 +94,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         onRefreshLoginClick();
         break;
       case R.id.list_thread_button:
-        ((ThreadListActivity) getActivity()).navigateToRecentThreadList();
+        ((FragmentActivity) getActivity()).navigateToRecentThreadList();
         break;
       default:
         break;
@@ -119,6 +119,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   private void onRefreshLoginClick() {
     persistentSettings.setUsername(usernameEdit.getText().toString());
     persistentSettings.setPassword(passwordEdit.getText().toString());
+    ((FragmentActivity) getActivity()).hideKeyboard();
 
     FluentFuture.from(
             discuzApi.login(
@@ -130,14 +131,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             new FutureCallback<Json>() {
               @Override
               public void onSuccess(Json result) {
-                Logger.d(result);
+                // TODO: better handle activity lifecycle.
+                // TODO: better handle message.
+                ((FragmentActivity) getActivity()).snackbar(result.optString("Message", "messagestr"));
               }
 
               @Override
               public void onFailure(@NonNull Throwable t) {
-                Logger.d("Error !", new Throwable(t));
+                ((FragmentActivity) getActivity()).snackbar("Network error!");
               }
             },
-            MoreExecutors.directExecutor());
+            CommonExecutors.uiExecutor());
   }
 }

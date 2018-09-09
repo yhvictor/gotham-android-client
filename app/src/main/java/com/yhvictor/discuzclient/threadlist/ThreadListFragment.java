@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
-import com.yhvictor.discuzclient.application.ThreadListActivity;
+import com.yhvictor.discuzclient.application.FragmentActivity;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
 
 import javax.inject.Inject;
@@ -71,7 +71,7 @@ public class ThreadListFragment extends Fragment
             .appendQueryParameter("tid", adapter.getItem(position).tid())
             .build();
 
-    ((ThreadListActivity) getActivity()).navigateToWebView(uri);
+    ((FragmentActivity) getActivity()).navigateToWebView(uri);
   }
 
   @Override
