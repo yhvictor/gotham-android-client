@@ -1,5 +1,6 @@
 package com.yhvictor.discuzclient.webview;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -91,16 +91,14 @@ public class WebViewFragment extends Fragment {
   }
 
   private class DiscuzWebViewClient extends WebViewClient {
+
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest webResourceRequest) {
-      Logger.d(webResourceRequest.getUrl().toString());
-      /*
-      if (webResourceRequest.getUrl().getQueryParameter("mod").equals("forumdisplay")) {
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+      Logger.d("1: " + url);
+      if ("forumdisplay".equals(Uri.parse(url).getQueryParameter("mod"))) {
         getActivity().getSupportFragmentManager().popBackStack();
         return true;
       }
-      */
-
       return false;
     }
   }

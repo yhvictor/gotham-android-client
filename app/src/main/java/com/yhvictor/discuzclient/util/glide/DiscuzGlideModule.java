@@ -21,7 +21,8 @@ public final class DiscuzGlideModule extends AppGlideModule {
   OkHttpStreamFetcher.OkHttpModelLoader factory;
 
   @Override
-  public void registerComponents(@NonNull Context context, @NonNull Glide glide, Registry registry) {
+  public void registerComponents(
+      @NonNull Context context, @NonNull Glide glide, Registry registry) {
     DiscuzClientApplication.appComponent.inject(this);
 
     registry.append(Request.class, InputStream.class, factory.getModelLoaderFactory());

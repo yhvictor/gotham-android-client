@@ -18,13 +18,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
+import com.yhvictor.discuzclient.application.ThreadListActivity;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
 import com.yhvictor.discuzclient.discuzapi.data.LoginInfo;
-import com.yhvictor.discuzclient.threadlist.ThreadListActivity;
 import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
 import com.yhvictor.discuzclient.util.net.HttpGetter;
@@ -64,7 +65,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     View view = inflater.inflate(R.layout.fragment_settings, container, false);
     view.findViewById(R.id.refresh_login_button).setOnClickListener(this);
     view.findViewById(R.id.list_thread_button).setOnClickListener(this);
-    view.findViewById(R.id.refresh_image).setOnClickListener(this);
+    view.findViewById(R.id.hash_image).setOnClickListener(this);
     view.findViewById(R.id.clear_cookie).setOnClickListener(this);
 
     imageView = view.findViewById(R.id.hash_image);
@@ -88,7 +89,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
       case R.id.clear_cookie:
         CookieManager.getInstance().removeAllCookies(value -> Logger.d("All cookies removed"));
         break;
-      case R.id.refresh_image:
+      case R.id.hash_image:
         refreshImage();
         break;
       case R.id.refresh_login_button:
@@ -111,6 +112,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             .build();
     GlideApp.with(imageView)
         .load(request)
+        .placeholder(R.drawable.ic_loading)
         .skipMemoryCache(true)
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .into(imageView);
@@ -130,7 +132,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         bitmapListenableFuture,
         new FutureCallback<Bitmap>() {
           @Override
-          public void onSuccess(Bitmap bitmap) {
+          public void onSuccess(@NonNull Bitmap bitmap) {
             CommonExecutors.uiExecutor()
                 .submit(
                     () -> {
@@ -144,7 +146,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
           public void onFailure(@NonNull Throwable t) {
             Logger.d("error!", t);
           }
-        });
+        },
+        MoreExecutors.directExecutor());
   }
 
   private void onRefreshLoginClick() {
@@ -158,7 +161,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         loginInfoListenableFuture,
         new FutureCallback<LoginInfo>() {
           @Override
-          public void onSuccess(@Nullable LoginInfo result) {
+          public void onSuccess(@NonNull LoginInfo result) {
             Logger.d(result.version);
             Logger.d(result.message);
             Logger.d(result.variables);
@@ -168,7 +171,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
           public void onFailure(@NonNull Throwable t) {
             Logger.d("Error !", new Throwable(t));
           }
-        });
+        },
+        MoreExecutors.directExecutor());
   }
 
   private void refreshFallback() {
@@ -207,7 +211,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         httpGetter.getResponseBody(request),
         new FutureCallback<ResponseBody>() {
           @Override
-          public void onSuccess(ResponseBody result) {
+          public void onSuccess(@NonNull ResponseBody result) {
             try {
               Logger.d(new String(result.bytes()));
             } catch (IOException e) {
@@ -219,6 +223,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
           public void onFailure(@NonNull Throwable t) {
             Logger.d("Error!", t);
           }
-        });
+        },
+        MoreExecutors.directExecutor());
   }
 }

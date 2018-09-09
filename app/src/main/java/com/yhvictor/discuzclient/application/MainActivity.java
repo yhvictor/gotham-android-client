@@ -1,4 +1,4 @@
-package com.yhvictor.discuzclient;
+package com.yhvictor.discuzclient.application;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,17 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.google.common.base.Function;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.yhvictor.discuzclient.application.DiscuzClientApplication;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
 import com.yhvictor.discuzclient.discuzapi.data.DiscuzThread;
-import com.yhvictor.discuzclient.discuzapi.data.ForumDisplay;
 import com.yhvictor.discuzclient.discuzapi.data.RecentThreadList;
-import com.yhvictor.discuzclient.webview.WebViewActivity;
 
 import java.util.List;
 
@@ -45,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
   public void onButton2Click(View view) {
     ListenableFuture<List<DiscuzThread>> threads =
-        Futures.transform(discuzApi.listRecentThread(2, 0, 100), RecentThreadList::getThreads);
+        Futures.transform(
+            discuzApi.listRecentThread(2, 0, 100),
+            RecentThreadList::getThreads,
+            MoreExecutors.directExecutor());
 
     Futures.addCallback(
         threads,
@@ -61,18 +62,19 @@ public class MainActivity extends AppCompatActivity {
           public void onFailure(Throwable t) {
             Log.i("yh_victor", "ERROR", t);
           }
-        });
+        },
+        MoreExecutors.directExecutor());
   }
 
   private void forumDisplay() {
     Futures.transform(
         discuzApi.forumDisplay(2, 1),
-        (Function<ForumDisplay, Object>)
-            forumDisplay -> {
-              for (DiscuzThread thread : forumDisplay.getThreads()) {
-                Log.i("yhvictor", thread.author + ": " + thread.subject);
-              }
-              return null;
-            });
+        forumDisplay -> {
+          for (DiscuzThread thread : forumDisplay.getThreads()) {
+            Log.i("yhvictor", thread.author + ": " + thread.subject);
+          }
+          return null;
+        },
+        MoreExecutors.directExecutor());
   }
 }

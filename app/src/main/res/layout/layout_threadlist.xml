@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/thread_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+
+    <ImageView
+        android:id="@+id/author_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="4dp"
+        tools:src="@drawable/ic_baseline_tag_faces_24px" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintLeft_toRightOf="@+id/author_image"
+        tools:text="author" />
+
+    <TextView
+        android:id="@+id/thread_creation_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorDarkGrey"
+        app:layout_constraintLeft_toRightOf="@+id/author_image"
+        app:layout_constraintTop_toBottomOf="@+id/author"
+        tools:text="1 分钟前" />
+
+    <TextView
+        android:id="@+id/thread_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="4dp"
+        android:paddingStart="40dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toRightOf="@+id/author_image"
+        app:layout_constraintTop_toBottomOf="@+id/author_image"
+        tools:text="233论坛--dddddddddddddddddddddddddd" />
+
+</android.support.constraint.ConstraintLayout>

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
+import com.yhvictor.discuzclient.application.ThreadListActivity;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
 
 import javax.inject.Inject;
@@ -79,8 +80,7 @@ public class ThreadListFragment extends Fragment
 
   @Override
   public void onRefresh() {
-    adapter.refreshList(
-        () -> swipeRefreshLayout.setRefreshing(false));
+    adapter.refreshList(() -> swipeRefreshLayout.setRefreshing(false));
   }
 
   @Override

@@ -1,4 +1,4 @@
-package com.yhvictor.discuzclient.threadlist;
+package com.yhvictor.discuzclient.application;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yhvictor.discuzclient.R;
-import com.yhvictor.discuzclient.application.DiscuzClientApplication;
 import com.yhvictor.discuzclient.setting.SettingsFragment;
+import com.yhvictor.discuzclient.threadlist.ThreadListFragment;
 import com.yhvictor.discuzclient.webview.WebViewFragment;
 
 public class ThreadListActivity extends AppCompatActivity {

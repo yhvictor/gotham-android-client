@@ -35,7 +35,8 @@ public class HttpGetter {
     return Futures.transform(
         getResponseBody(url, headerPairs),
         (ResponseBody responseBody) ->
-            BitmapFactory.decodeStream(responseBody.byteStream(), null, options));
+            BitmapFactory.decodeStream(responseBody.byteStream(), null, options),
+        MoreExecutors.directExecutor());
   }
 
   public ListenableFuture<ResponseBody> getResponseBody(String url, HeaderPair... headerPairs) {
@@ -57,7 +58,8 @@ public class HttpGetter {
           } else {
             throw new IOException(response.code() + ": " + response.message());
           }
-        });
+        },
+        MoreExecutors.directExecutor());
   }
 
   private ListenableFuture<Response> enqueue(Request request) {

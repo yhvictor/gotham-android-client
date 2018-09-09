@@ -2,10 +2,8 @@ package com.yhvictor.discuzclient.application;
 
 import android.app.Application;
 
-import com.yhvictor.discuzclient.MainActivity;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApiModule;
 import com.yhvictor.discuzclient.setting.SettingsFragment;
-import com.yhvictor.discuzclient.threadlist.ThreadListActivity;
 import com.yhvictor.discuzclient.threadlist.ThreadListFragment;
 import com.yhvictor.discuzclient.util.concurrency.ConcurrencyModule;
 import com.yhvictor.discuzclient.util.constants.ConstantsModule;
@@ -21,7 +19,6 @@ import dagger.android.AndroidInjectionModule;
 @Singleton
 @Component(
     modules = {
-        ActivityModule.class,
         AndroidInjectionModule.class,
         ConcurrencyModule.class,
         ConstantsModule.class,
@@ -46,7 +43,6 @@ public interface AppComponent {
   void inject(ThreadListActivity threadListActivity);
 
   void inject(MainActivity mainActivity);
-
 
   @Component.Builder
   interface Builder {

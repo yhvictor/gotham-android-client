@@ -13,27 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".webview.WebViewActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="95.179.161.95"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
         <activity
-            android:name=".threadlist.ThreadListActivity"
+            android:name=".application.ThreadListActivity"
             android:label="thread list">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

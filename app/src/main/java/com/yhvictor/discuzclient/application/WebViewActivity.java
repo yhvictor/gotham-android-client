@@ -1,4 +1,4 @@
-package com.yhvictor.discuzclient.webview;
+package com.yhvictor.discuzclient.application;
 
 import android.content.Context;
 import android.content.Intent;

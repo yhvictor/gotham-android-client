@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/refresh_image"
+        android:id="@+id/list_thread_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="refresh image" />
+        android:text="list threads"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/hash_image"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp" />
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:baseline="20dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/hash_image_code"
+        app:layout_constraintEnd_toStartOf="@id/hash_image_code"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/hash_image_code"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="hash image code" />
+        android:hint="hash image code"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toEndOf="@+id/hash_image"
+        app:layout_constraintTop_toBottomOf="@+id/list_thread_button" />
 
     <Button
         android:id="@+id/refresh_login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="refresh login" />
-
-    <Button
-        android:id="@+id/list_thread_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="list threads" />
+        android:text="refresh login"
+        app:layout_constraintTop_toBottomOf="@id/hash_image_code" />
 
     <Button
         android:id="@+id/clear_cookie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="clear cookie" />
-</LinearLayout>
+        android:text="clear cookie"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</android.support.constraint.ConstraintLayout>
