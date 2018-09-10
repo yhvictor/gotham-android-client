@@ -72,12 +72,12 @@ public class ThreadListArrayAdapter extends BaseAdapter {
     final View view;
 
     if (convertView == null) {
-      view = inflater.inflate(R.layout.layout_threadlist, parent, false);
+      view = inflater.inflate(R.layout.layout_thread_list, parent, false);
     } else {
       view = convertView;
     }
 
-    TextView threadName = view.findViewById(R.id.thread_name);
+    TextView threadName = view.findViewById(R.id.subject);
     TextView author = view.findViewById(R.id.author);
     TextView threadCreationTime = view.findViewById(R.id.thread_creation_time);
     ImageView imageView = view.findViewById(R.id.author_image);
