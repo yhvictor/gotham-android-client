@@ -4,6 +4,12 @@ import android.util.Log;
 
 import com.google.common.base.Function;
 
+/**
+ * Static debug logging functions.
+ *
+ * <p>Should be striped by proguard. TODO(yh_victor): check it's possible to add checking to
+ * proguarding to ensure this is striped.
+ */
 public class Logger {
 
   private Logger() {}

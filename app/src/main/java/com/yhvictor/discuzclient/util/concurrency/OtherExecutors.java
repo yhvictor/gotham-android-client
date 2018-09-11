@@ -9,20 +9,33 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class CommonExecutors {
+/** Provides other executors like ui_thread and background pool. */
+public class OtherExecutors {
+
+  // TODO(yh_victor): no thread switch if still in pool.
+  /** Background pool executor */
   private static final ListeningExecutorService POOL_EXECUTOR =
-      MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
-  private static final Handler UI_HANDLER = new Handler(Looper.getMainLooper());
+      MoreExecutors.listeningDecorator(
+          new ThreadPoolExecutor(
+              2, Integer.MAX_VALUE, 30L, TimeUnit.SECONDS, new SynchronousQueue<>()));
+
+  /** UI executor */
   private static final ListeningExecutorService UI_EXECUTOR =
       MoreExecutors.listeningDecorator(
           new AbstractExecutorService() {
+            private Handler uiHandler = new Handler(Looper.getMainLooper());
 
             @Override
             public void execute(@NonNull Runnable command) {
-              UI_HANDLER.post(command);
+              if (Looper.myLooper() == Looper.getMainLooper()) {
+                command.run();
+              } else {
+                uiHandler.post(command);
+              }
             }
 
             @Override
@@ -52,7 +65,7 @@ public class CommonExecutors {
             }
           });
 
-  private CommonExecutors() {}
+  private OtherExecutors() {}
 
   public static ListeningExecutorService poolExecutor() {
     return POOL_EXECUTOR;

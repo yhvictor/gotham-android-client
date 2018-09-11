@@ -2,11 +2,12 @@ package com.yhvictor.discuzclient.threadlist;
 
 import com.yhvictor.discuzclient.util.json.Json;
 
-class ThreadData {
+/** Holds necessary data to render A thread entry. */
+class ThreadModel {
 
   private final Json json;
 
-  ThreadData(Json json) {
+  ThreadModel(Json json) {
     this.json = json;
   }
 

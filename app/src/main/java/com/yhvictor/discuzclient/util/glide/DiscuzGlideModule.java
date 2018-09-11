@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import okhttp3.Request;
 
+/** Glide entry for glide to pick up. */
 @GlideModule
 public final class DiscuzGlideModule extends AppGlideModule {
   @Inject OkHttpStreamFetcher.OkHttpModelLoader factory;

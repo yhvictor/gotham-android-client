@@ -2,7 +2,6 @@ package com.yhvictor.discuzclient.application;
 
 import android.app.Application;
 
-import com.yhvictor.discuzclient.constants.ConstantsModule;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApiModule;
 import com.yhvictor.discuzclient.setting.SettingsFragment;
 import com.yhvictor.discuzclient.threadlist.ThreadListFragment;
@@ -14,14 +13,12 @@ import com.yhvictor.discuzclient.webview.WebViewFragment;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
 
+/** App component for the project. */
 @Singleton
 @Component(
     modules = {
-      AndroidInjectionModule.class,
       ConcurrencyModule.class,
-      ConstantsModule.class,
       DiscuzApiModule.class,
       OkHttpClientModule.class,
     },
@@ -42,7 +39,7 @@ public interface AppComponent {
 
   void inject(FragmentActivity fragmentActivity);
 
-  void inject(MainActivity mainActivity);
+  void inject(TestActivity testActivity);
 
   @Component.Builder
   interface Builder {

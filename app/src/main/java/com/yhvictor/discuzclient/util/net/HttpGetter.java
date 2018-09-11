@@ -21,6 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+/** Library to request data from net. */
 public class HttpGetter {
   private final OkHttpClient okHttpClient;
 

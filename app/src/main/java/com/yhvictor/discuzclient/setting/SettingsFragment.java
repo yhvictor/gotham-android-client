@@ -15,11 +15,11 @@ import com.google.common.util.concurrent.FluentFuture;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
-import com.yhvictor.discuzclient.annotation.HostName;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
 import com.yhvictor.discuzclient.application.FragmentActivity;
+import com.yhvictor.discuzclient.constants.Constants;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
-import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
+import com.yhvictor.discuzclient.util.concurrency.OtherExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
 import com.yhvictor.discuzclient.util.json.Json;
 import com.yhvictor.discuzclient.util.json.JsonUtil;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import okhttp3.Request;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
-  @HostName @Inject String hostName;
+  @Inject Constants constants;
   @Inject HttpGetter httpGetter;
   @Inject DiscuzApi discuzApi;
   @Inject WebViewCookieHandler webViewCookieHandler;
@@ -64,7 +64,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     passwordEdit = view.findViewById(R.id.password);
     secCodeEdit = view.findViewById(R.id.hash_image_code);
 
-    // TODO: use data binding.
     usernameEdit.setText(persistentSettings.getUsername());
     passwordEdit.setText(persistentSettings.getPassword());
     refreshImage();
@@ -104,10 +103,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
   private void refreshImage() {
     Request request =
         new Request.Builder()
-            .url("http://" + hostName + "/misc.php?mod=seccode&update=12345&idhash=S199&mobile=2")
-            .addHeader(
-                "Referer", "http://" + hostName + "/member.php?mod=logging&action=login&mobile=2")
+            .url(constants.host() + "/api/mobile/index.php?version=4&module=seccode")
+            .addHeader("Referer", constants.host())
             .build();
+
     GlideApp.with(imageView)
         .load(request)
         .placeholder(R.drawable.ic_loading)
@@ -131,9 +130,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             new FutureCallback<Json>() {
               @Override
               public void onSuccess(Json result) {
-                // TODO: better handle activity lifecycle.
-                // TODO: better handle message.
-                ((FragmentActivity) getActivity()).snackbar(result.optString("Message", "messagestr"));
+                // TODO(yh_victor): better handle activity lifecycle.
+                // TODO(yh_victor): better handle message.
+                ((FragmentActivity) getActivity())
+                    .snackbar(result.optString("Message", "messagestr"));
               }
 
               @Override
@@ -141,6 +141,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 ((FragmentActivity) getActivity()).snackbar("Network error!");
               }
             },
-            CommonExecutors.uiExecutor());
+            OtherExecutors.uiExecutor());
   }
 }

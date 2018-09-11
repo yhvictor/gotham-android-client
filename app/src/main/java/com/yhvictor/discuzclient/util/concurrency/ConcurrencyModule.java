@@ -12,11 +12,11 @@ public class ConcurrencyModule {
 
   @Provides
   Executor executor() {
-    return CommonExecutors.poolExecutor();
+    return OtherExecutors.poolExecutor();
   }
 
   @Provides
   ListeningExecutorService listeningExecutorService() {
-    return CommonExecutors.poolExecutor();
+    return OtherExecutors.poolExecutor();
   }
 }

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/** Wrapper over shared preference to provide persistent data. */
 public class PersistentSettings {
   private final SharedPreferences sharedPreferences;
 

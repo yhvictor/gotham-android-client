@@ -8,9 +8,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represent a Json object.
+ *
+ * <p>TODO(yh_victor): handle number & boolean.
+ */
 @SuppressWarnings("unchecked")
 public class Json {
-  // Map<String,Json>, List<Json> or String.
+  // Internal value which could Map<String,Json>, List<Json> or String.
   Object value;
 
   Json(Object value) {

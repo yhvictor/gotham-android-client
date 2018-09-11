@@ -14,6 +14,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 
+/** Util methods for {@link Json}. */
 public class JsonUtil {
   private JsonUtil() {}
 

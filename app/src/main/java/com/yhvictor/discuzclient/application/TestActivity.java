@@ -20,7 +20,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+/** Activity for debug use. */
+public class TestActivity extends AppCompatActivity {
   @Inject DiscuzApi discuzApi;
 
   @Override

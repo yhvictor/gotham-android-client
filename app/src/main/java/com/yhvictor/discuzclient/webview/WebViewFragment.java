@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import com.yhvictor.discuzclient.R;
 import com.yhvictor.discuzclient.application.DiscuzClientApplication;
 
+/** Fragment to display a web view. */
 public class WebViewFragment extends Fragment {
   private WebView webView;
   private ProgressBar progressBar;

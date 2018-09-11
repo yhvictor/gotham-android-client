@@ -1,6 +1,6 @@
 package com.yhvictor.discuzclient.discuzapi;
 
-import com.yhvictor.discuzclient.annotation.HostName;
+import com.yhvictor.discuzclient.constants.Constants;
 
 import javax.inject.Singleton;
 
@@ -15,12 +15,11 @@ public class DiscuzApiModule {
 
   @Provides
   @Singleton
-  DiscuzApi discuzApi(@HostName String hostName, OkHttpClient okHttpClient) {
+  DiscuzApi discuzApi(Constants constants, OkHttpClient okHttpClient) {
     Retrofit retrofit =
         new Retrofit.Builder()
-            .baseUrl("http://" + hostName + "/api/mobile/")
+            .baseUrl(constants.host())
             .client(okHttpClient)
-            // .addConverterFactory(ScalarsConverterFactory.create())
             .addCallAdapterFactory(GuavaCallAdapterFactory.create())
             .build();
 

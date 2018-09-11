@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.yhvictor.discuzclient.R;
@@ -14,6 +13,11 @@ import com.yhvictor.discuzclient.setting.SettingsFragment;
 import com.yhvictor.discuzclient.threadlist.ThreadListFragment;
 import com.yhvictor.discuzclient.webview.WebViewFragment;
 
+/**
+ * App entry activity.
+ *
+ * <p>TODO(yh_victor): handle incoming urls.
+ */
 public class FragmentActivity extends AppCompatActivity {
 
   private Snackbar snackbar;
@@ -66,6 +70,7 @@ public class FragmentActivity extends AppCompatActivity {
 
   public void hideKeyboard() {
     InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getRootView().getWindowToken(), 0);
+    imm.hideSoftInputFromWindow(
+        findViewById(android.R.id.content).getRootView().getWindowToken(), 0);
   }
 }

@@ -16,10 +16,10 @@ import com.google.common.util.concurrent.FluentFuture;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.yhvictor.discuzclient.R;
-import com.yhvictor.discuzclient.annotation.HostName;
+import com.yhvictor.discuzclient.constants.Constants;
 import com.yhvictor.discuzclient.debug.Logger;
 import com.yhvictor.discuzclient.discuzapi.DiscuzApi;
-import com.yhvictor.discuzclient.util.concurrency.CommonExecutors;
+import com.yhvictor.discuzclient.util.concurrency.OtherExecutors;
 import com.yhvictor.discuzclient.util.glide.GlideApp;
 import com.yhvictor.discuzclient.util.json.JsonUtil;
 
@@ -31,17 +31,20 @@ import javax.inject.Inject;
 
 import okhttp3.Request;
 
+/**
+ * Adapter to show thread list.
+ */
 public class ThreadListArrayAdapter extends BaseAdapter {
-  private final String hostName;
+  private final Constants constants;
   private final DiscuzApi discuzApi;
   private final LayoutInflater inflater;
 
-  private final List<ThreadData> discuzThreads = Collections.synchronizedList(new ArrayList<>());
+  private final List<ThreadModel> discuzThreads = Collections.synchronizedList(new ArrayList<>());
 
   @Inject
   public ThreadListArrayAdapter(
-      @HostName String hostName, Application context, DiscuzApi discuzApi) {
-    this.hostName = hostName;
+      Constants constants, Application context, DiscuzApi discuzApi) {
+    this.constants = constants;
     this.discuzApi = discuzApi;
     this.inflater = LayoutInflater.from(context);
   }
@@ -52,7 +55,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   }
 
   @Override
-  public ThreadData getItem(int position) {
+  public ThreadModel getItem(int position) {
     return discuzThreads.get(position);
   }
 
@@ -68,7 +71,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
   }
 
   private @NonNull View createViewFromResource(
-      ThreadData thread, @Nullable View convertView, @NonNull ViewGroup parent) {
+      ThreadModel thread, @Nullable View convertView, @NonNull ViewGroup parent) {
     final View view;
 
     if (convertView == null) {
@@ -84,8 +87,7 @@ public class ThreadListArrayAdapter extends BaseAdapter {
 
     Request request =
         new Request.Builder()
-            .url(
-                "https://" + hostName + "/uc_server/avatar.php?size=small&uid=" + thread.authorId())
+            .url(constants.host() + "/uc_server/avatar.php?size=small&uid=" + thread.authorId())
             .build();
 
     threadName.setText(thread.subject());
@@ -96,16 +98,17 @@ public class ThreadListArrayAdapter extends BaseAdapter {
     return view;
   }
 
+  // TODO(yh_victor): move this out of this class.
   public void refreshList(Runnable runnable) {
     FluentFuture.from(discuzApi.listRecentThread(2, 0, 100))
         .transformAsync(JsonUtil::transform, MoreExecutors.directExecutor())
         .transform(json -> json.optArray("Variables", "data"), MoreExecutors.directExecutor())
         .transform(
-            jsonList -> Lists.transform(jsonList, ThreadData::new), MoreExecutors.directExecutor())
+            jsonList -> Lists.transform(jsonList, ThreadModel::new), MoreExecutors.directExecutor())
         .addCallback(
-            new FutureCallback<List<ThreadData>>() {
+            new FutureCallback<List<ThreadModel>>() {
               @Override
-              public void onSuccess(List<ThreadData> result) {
+              public void onSuccess(List<ThreadModel> result) {
                 Logger.d("thread count: " + result.size());
 
                 discuzThreads.clear();
@@ -120,6 +123,6 @@ public class ThreadListArrayAdapter extends BaseAdapter {
                 runnable.run();
               }
             },
-            CommonExecutors.uiExecutor());
+            OtherExecutors.uiExecutor());
   }
 }

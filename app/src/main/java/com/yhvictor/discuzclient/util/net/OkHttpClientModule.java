@@ -17,6 +17,7 @@ public class OkHttpClientModule {
 
   private static final int CACHE_SIZE = 10 * 1024 * 1024; // 10MB
 
+  // TODO(yh_victor): consider move this inside a injectable class.
   @Provides
   @Singleton
   OkHttpClient okHttpClient(Application application, WebViewCookieHandler webViewCookieHandler) {

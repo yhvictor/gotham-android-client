@@ -7,6 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
+/**
+ * Web view activity that is not in using.
+ *
+ * <p>For long term, this should be a fall back for user to use functions those are not provided by
+ * app directly.
+ */
 public class WebViewActivity extends AppCompatActivity {
   WebView discuzWebView;
 

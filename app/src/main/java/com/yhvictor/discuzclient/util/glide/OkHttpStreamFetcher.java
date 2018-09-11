@@ -24,6 +24,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Customized ModelLoader for Glide.
+ *
+ * <p>This consumes {@link Request} and {@output InputStream}.
+ */
 class OkHttpStreamFetcher implements DataFetcher<InputStream> {
   private final OkHttpModelLoader factory;
   private final Request request;
